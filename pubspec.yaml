@@ -1,11 +1,11 @@
  
 name: yir_text_form_field
-description: "A new Flutter package project."
+description: A Flutter text form field with glassmorphism design, animated borders, shimmer effects, blur background, and fully customizable UI.
 version: 0.0.1
 
-homepage: https://github.com/Younis7575/yir_glass_card
-repository: https://github.com/Younis7575/yir_glass_card
-issue_tracker: https://github.com/Younis7575/yir_glass_card/issues
+homepage: https://github.com/Younis7575/yir_text_form_field
+repository: https://github.com/Younis7575/yir_text_form_field
+issue_tracker: https://github.com/Younis7575/yir_text_form_field/issues
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
