@@ -1,4 +1,4 @@
-# 🧊 Yir Glass Card
+# 🧊 Yir Text Form Field
 
 A modern **glassmorphism card widget** for Flutter with blur, gradient, shadow, and fully customizable UI.
 
@@ -18,9 +18,9 @@ A modern **glassmorphism card widget** for Flutter with blur, gradient, shadow, 
 
 ## 📸 Preview
 
-![Demo](https://raw.githubusercontent.com/Younis7575/yir_glass_card/master/YIR_CARD_GIF.gif)
+![Demo](https://raw.githubusercontent.com/Younis7575/yir_text_form_field/master/YIR_Textfield_GIF.gif)
 
-![Preview](https://raw.githubusercontent.com/Younis7575/yir_glass_card/master/YIR_CARD.jpeg)
+![Preview](https://raw.githubusercontent.com/Younis7575/yir_text_form_field/master/YIR_textfield.jpeg)
 
 ## 📦 Installation
 

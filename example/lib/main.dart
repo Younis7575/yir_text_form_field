@@ -12,6 +12,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'YIR Text Form Fields',
+      theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: Colors.black),
       home: const MyHomePage(),
     );
   }
@@ -34,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -46,6 +49,18 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Form submitted successfully!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,97 +68,148 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text(
           "YIR Text Form Fields",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.red,
         elevation: 0,
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline, color: Colors.white),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('YIR Text Form Field'),
+                  content: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('• Custom shaped border'),
+                      Text('• Animated glow pulse'),
+                      Text('• Shimmer sweep effect'),
+                      Text('• Floating animation'),
+                      Text('• Tap scale effect'),
+                      SizedBox(height: 8),
+                      Text(
+                        'All fields have red borders matching the design!',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-              
-              // Name field
-              const Text(
-                "Enter Your Name",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
               const SizedBox(height: 8),
+
               YirTextFormField(
                 controller: _nameController,
                 hint: "John Doe",
-                label: "Full Name",
+                label: "Enter your full name",
                 keyboardType: TextInputType.name,
+                prefixIcon: const Icon(
+                  Icons.person_outline,
+                  color: Colors.white70,
+                  size: 20,
+                ),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return "Name is required";
                   }
+                  if ((value?.length ?? 0) < 3) {
+                    return "Name must be at least 3 characters";
+                  }
                   return null;
+                },
+                onChanged: (value) {
+                  debugPrint('Name changed: $value');
                 },
               ),
               const SizedBox(height: 24),
 
-              // Email field
-              const Text(
-                "Enter Your Email",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              const SizedBox(height: 8),
               YirTextFormField(
                 controller: _emailController,
                 hint: "john@example.com",
-                label: "Email Address",
+                label: "Enter your email",
                 keyboardType: TextInputType.emailAddress,
-                prefixIcon: const Icon(Icons.mail, color: Colors.white70),
+                prefixIcon: const Icon(
+                  Icons.email_outlined,
+                  color: Colors.white70,
+                  size: 20,
+                ),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return "Email is required";
                   }
-                  if (!value!.contains("@")) {
-                    return "Enter a valid email";
+                  if (!value!.contains("@") || !value.contains(".")) {
+                    return "Enter a valid email address";
                   }
                   return null;
+                },
+                onSubmitted: (value) {
+                  debugPrint('Email submitted: $value');
                 },
               ),
               const SizedBox(height: 24),
 
-              // Phone field
-              const Text(
-                "Enter Your Phone",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              const SizedBox(height: 8),
               YirTextFormField(
                 controller: _phoneController,
                 hint: "+1 (555) 000-0000",
-                label: "Phone Number",
+                label: "Enter your phone number",
                 keyboardType: TextInputType.phone,
-                prefixIcon: const Icon(Icons.phone, color: Colors.white70),
+                prefixIcon: const Icon(
+                  Icons.phone_outlined,
+                  color: Colors.white70,
+                  size: 20,
+                ),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
-                    return "Phone is required";
+                    return "Phone number is required";
+                  }
+                  if ((value?.length ?? 0) < 10) {
+                    return "Enter a valid phone number";
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 24),
 
-              // Password field
-              const Text(
-                "Enter Your Password",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              const SizedBox(height: 8),
               YirTextFormField(
                 controller: _passwordController,
                 hint: "••••••••",
-                label: "Password",
+                label: "Create a password",
                 keyboardType: TextInputType.visiblePassword,
-                suffixIcon: const Icon(Icons.visibility, color: Colors.white70),
+
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscurePassword
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    color: Colors.white70,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                ),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return "Password is required";
@@ -151,89 +217,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   if ((value?.length ?? 0) < 6) {
                     return "Password must be at least 6 characters";
                   }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 24),
-
-              // Address field
-              const Text(
-                "Enter Your Address",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              const SizedBox(height: 8),
-              YirTextFormField(
-                controller: _addressController,
-                hint: "123 Main St, City, State 12345",
-                label: "Full Address",
-                keyboardType: TextInputType.streetAddress,
-                maxLines: 2,
-                minLines: 2,
-                validator: (value) {
-                  if (value?.isEmpty ?? true) {
-                    return "Address is required";
+                  if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)').hasMatch(value!)) {
+                    return "Password must contain both letters and numbers";
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 24),
-
-              // Message field
-              const Text(
-                "Enter Your Message",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              const SizedBox(height: 8),
-              YirTextFormField(
-                controller: _messageController,
-                hint: "Type your message here...",
-                label: "Message",
-                keyboardType: TextInputType.multiline,
-                maxLines: 4,
-                minLines: 3,
-                validator: (value) {
-                  if (value?.isEmpty ?? true) {
-                    return "Message is required";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 32),
-
-              // Submit button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            "Form submitted!\nName: ${_nameController.text}",
-                          ),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text(
-                    "Submit",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
             ],
           ),
         ),

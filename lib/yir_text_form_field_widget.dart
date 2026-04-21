@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:yir_text_form_field/paints/card_paint.dart';
@@ -104,9 +106,7 @@ class _YirTextFormFieldState extends State<YirTextFormField>
   late final Animation<double> _floatAnim;
   late final Animation<double> _tapScaleAnim;
 
-  // ignore: unused_field
   bool _isFocused = false;
-  // ignore: unused_field
   bool _isPressed = false;
 
   @override
@@ -179,7 +179,7 @@ class _YirTextFormFieldState extends State<YirTextFormField>
       hintText: widget.hint,
       labelText: widget.label,
       border: InputBorder.none,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       prefixIcon: widget.prefixIcon,
       suffixIcon: widget.suffixIcon,
     );
@@ -188,83 +188,71 @@ class _YirTextFormFieldState extends State<YirTextFormField>
 
     // Build the text form field
     Widget textField = ClipPath(
-      clipper: RPSPaintContainer(),
+      clipper: RPSPaintField(),
       child: BackdropFilter(
         filter: ImageFilter.blur(
           sigmaX: widget.blur,
           sigmaY: widget.blur,
         ),
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFF1a1a1a),
-          ),
-          child: Stack(
-            children: [
-              // Background blur layer
+        child: Stack(
+          children: [
+             
+            // Border and glow painter
+            if (widget.enableGlowPulse)
               Positioned.fill(
-                child: Container(
-                  color: Colors.black.withValues(alpha: 0.2),
+                child: AnimatedBuilder(
+                  animation: _glowAnim,
+                  builder: (_, __) => CustomPaint(
+                    painter: RPSCustomPainter(opacity: _glowAnim.value),
+                  ),
+                ),
+              )
+            else
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: const RPSCustomPainter(opacity: 0.6),
                 ),
               ),
-
-              // Border and glow painter
-              if (widget.enableGlowPulse)
-                Positioned.fill(
-                  child: AnimatedBuilder(
-                    animation: _glowAnim,
-                    builder: (_, __) => CustomPaint(
-                      painter: RPSCustomPainter(opacity: _glowAnim.value),
-                    ),
+        
+            // Shimmer sweep
+            if (widget.enableShimmer)
+              Positioned.fill(
+                child: AnimatedBuilder(
+                  animation: _shimmerAnim,
+                  builder: (_, __) => CustomPaint(
+                    painter: _ShimmerPainter(progress: _shimmerAnim.value),
                   ),
-                )
-              else
-                Positioned.fill(
-                  child: CustomPaint(
-                    painter: RPSCustomPainter(opacity: 0.6),
-                  ),
-                ),
-
-              // Shimmer sweep
-              if (widget.enableShimmer)
-                Positioned.fill(
-                  child: AnimatedBuilder(
-                    animation: _shimmerAnim,
-                    builder: (_, __) => CustomPaint(
-                      painter: _ShimmerPainter(progress: _shimmerAnim.value),
-                    ),
-                  ),
-                ),
-
-              // Text form field
-              Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
-                child: TextFormField(
-                  controller: widget.controller,
-                  keyboardType: widget.keyboardType,
-                  maxLines: widget.maxLines,
-                  minLines: widget.minLines,
-                  style: widget.style ??
-                      const TextStyle(color: Colors.white, fontSize: 14),
-                  decoration: decoration.copyWith(
-                    hintStyle: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
-                    labelStyle: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                    ),
-                  ),
-                  validator: widget.validator,
-                  onChanged: widget.onChanged,
-                  onFieldSubmitted: widget.onSubmitted,
-                  onTap: () => setState(() => _isFocused = true),
-                  onTapOutside: (_) =>
-                      setState(() => _isFocused = false),
                 ),
               ),
-            ],
-          ),
+        
+            // Text form field
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: TextFormField(
+                controller: widget.controller,
+                keyboardType: widget.keyboardType,
+                maxLines: widget.maxLines,
+                minLines: widget.minLines,
+                style: widget.style ??
+                    const TextStyle(color: Colors.white, fontSize: 14),
+                decoration: decoration.copyWith(
+                  hintStyle: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                  labelStyle: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+                validator: widget.validator,
+                onChanged: widget.onChanged,
+                onFieldSubmitted: widget.onSubmitted,
+                onTap: () => setState(() => _isFocused = true),
+                onTapOutside: (_) => setState(() => _isFocused = false),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -312,14 +300,13 @@ class _ShimmerPainter extends CustomPainter {
 
   Path _buildPath(Size size) {
     Path path = Path();
-    path.moveTo(size.width * 0.009192048, size.height * 0.1);
-    path.lineTo(size.width * 0.1875907, size.height * 0);
-    path.lineTo(size.width * 0.9433645, size.height * 0);
-    path.lineTo(size.width * 0.9993916, size.height * 0.15);
-    path.lineTo(size.width * 0.9993916, size.height * 0.85);
-    path.lineTo(size.width * 0.9433645, size.height);
-    path.lineTo(size.width * 0.1875907, size.height);
-    path.lineTo(size.width * 0.009192048, size.height * 0.9);
+    path.moveTo(size.width * 0.9976415, size.height * 0.01219512);
+    path.lineTo(size.width * 0.9976415, size.height * 0.8127854);
+    path.lineTo(size.width * 0.9705660, size.height * 0.9878049);
+    path.lineTo(size.width * 0.002358491, size.height * 0.9878049);
+    path.lineTo(size.width * 0.002358491, size.height * 0.1030393);
+    path.lineTo(size.width * 0.02212467, size.height * 0.01219512);
+    path.lineTo(size.width * 0.9976415, size.height * 0.01219512);
     path.close();
     return path;
   }
@@ -331,7 +318,7 @@ class _ShimmerPainter extends CustomPainter {
     if (metrics.isEmpty) return;
 
     final total = metrics.fold<double>(0, (sum, m) => sum + m.length);
-    const arcLength = 60.0;
+    const arcLength = 80.0;
     final headPos = total * progress;
 
     for (final metric in metrics) {
@@ -345,7 +332,7 @@ class _ShimmerPainter extends CustomPainter {
       canvas.drawPath(
         arcPath,
         Paint()
-          ..color = Colors.white.withValues(alpha: 0.15)
+          ..color = Colors.white.withValues(alpha: 0.12)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 6
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
@@ -354,7 +341,7 @@ class _ShimmerPainter extends CustomPainter {
       canvas.drawPath(
         arcPath,
         Paint()
-          ..color = Colors.white.withValues(alpha: 0.7)
+          ..color = Colors.white.withValues(alpha: 0.6)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1.5,
       );

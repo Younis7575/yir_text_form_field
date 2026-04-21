@@ -1,58 +1,23 @@
+
 import 'package:flutter/material.dart';
 
 // ─────────────────────────────────────────────
-//  RPSCustomPainter – Text Form Field Design
+//  RPSPaintField – Clipper for text form field
 // ─────────────────────────────────────────────
-class RPSCustomPainter extends CustomPainter {
-  final double opacity;
-
-  const RPSCustomPainter({this.opacity = 1.0});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path_0 = Path();
-    path_0.moveTo(size.width * 0.009192048, size.height * 0.1);
-    path_0.lineTo(size.width * 0.1875907, size.height * 0);
-    path_0.lineTo(size.width * 0.9433645, size.height * 0);
-    path_0.lineTo(size.width * 0.9993916, size.height * 0.15);
-    path_0.lineTo(size.width * 0.9993916, size.height * 0.85);
-    path_0.lineTo(size.width * 0.9433645, size.height);
-    path_0.lineTo(size.width * 0.1875907, size.height);
-    path_0.lineTo(size.width * 0.009192048, size.height * 0.9);
-    path_0.close();
-
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Color(0xff777777).withValues(alpha: opacity * 0.3);
-    canvas.drawPath(path_0, paint_0_fill);
-
-    // Border
-    Paint paint_0_stroke = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
-    paint_0_stroke.color = Color(0xffffffff).withValues(alpha: opacity * 0.6);
-    canvas.drawPath(path_0, paint_0_stroke);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
-
-// ─────────────────────────────────────────────
-//  RPSPaintContainer – Shape Clipper
-// ─────────────────────────────────────────────
-class RPSPaintContainer extends CustomClipper<Path> {
+class RPSPaintField extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path_0 = Path();
-    path_0.moveTo(size.width * 0.009192048, size.height * 0.1);
-    path_0.lineTo(size.width * 0.1875907, size.height * 0);
-    path_0.lineTo(size.width * 0.9433645, size.height * 0);
-    path_0.lineTo(size.width * 0.9993916, size.height * 0.15);
-    path_0.lineTo(size.width * 0.9993916, size.height * 0.85);
-    path_0.lineTo(size.width * 0.9433645, size.height);
-    path_0.lineTo(size.width * 0.1875907, size.height);
-    path_0.lineTo(size.width * 0.009192048, size.height * 0.9);
+    
+    path_0.moveTo(size.width * 0.9976415, size.height * 0.01219512);
+    path_0.lineTo(size.width * 0.9976415, size.height * 0.8127854);
+    path_0.lineTo(size.width * 0.9705660, size.height * 0.9878049);
+    path_0.lineTo(size.width * 0.002358491, size.height * 0.9878049);
+    path_0.lineTo(size.width * 0.002358491, size.height * 0.1030393);
+    path_0.lineTo(size.width * 0.02212467, size.height * 0.01219512);
+    path_0.lineTo(size.width * 0.9976415, size.height * 0.01219512);
     path_0.close();
+    
     return path_0;
   }
 
@@ -60,3 +25,60 @@ class RPSPaintContainer extends CustomClipper<Path> {
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
 
+// ─────────────────────────────────────────────
+//  RPSCustomPainter – Border and glow painter
+// ─────────────────────────────────────────────
+class RPSCustomPainter extends CustomPainter {
+  final double opacity;
+
+  const RPSCustomPainter({this.opacity = 1.0});
+
+  Path _buildPath(Size size) {
+    Path path_0 = Path();
+    
+    path_0.moveTo(size.width * 0.9976415, size.height * 0.01219512);
+    path_0.lineTo(size.width * 0.9976415, size.height * 0.8127854);
+    path_0.lineTo(size.width * 0.9705660, size.height * 0.9878049);
+    path_0.lineTo(size.width * 0.002358491, size.height * 0.9878049);
+    path_0.lineTo(size.width * 0.002358491, size.height * 0.1030393);
+    path_0.lineTo(size.width * 0.02212467, size.height * 0.01219512);
+    path_0.lineTo(size.width * 0.9976415, size.height * 0.01219512);
+    path_0.close();
+    
+    return path_0;
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = _buildPath(size);
+
+    // Fill layer
+    // ignore: non_constant_identifier_names
+    Paint paint_fill = Paint()..style = PaintingStyle.fill;
+    paint_fill.color = const Color(0xff777777).withValues(alpha: opacity * 0.15);
+    canvas.drawPath(path, paint_fill);
+
+    // Outer glow
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = Colors.white.withValues(alpha: opacity * 0.25)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
+    );
+
+    // Main border stroke
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = const Color.fromARGB(255, 255, 255, 255).withValues(alpha: opacity)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant RPSCustomPainter oldDelegate) =>
+      oldDelegate.opacity != opacity;
+}
