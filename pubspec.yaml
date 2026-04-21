@@ -1,0 +1,40 @@
+ 
+name: yir_text_form_field
+description: "A new Flutter package project."
+version: 0.0.1
+
+homepage: https://github.com/Younis7575/yir_glass_card
+repository: https://github.com/Younis7575/yir_glass_card
+issue_tracker: https://github.com/Younis7575/yir_glass_card/issues
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+# 🔥 Package discoverability improve karega
+topics:
+  - flutter
+  - ui
+  - glassmorphism
+  - widget
+  - design
+
+# 🔥 Platform support (auto detect hota hai but explicit better)
+platforms:
+  android:
+  ios:
+  web:
+  windows:
+  macos:
+  linux:
+
+flutter:

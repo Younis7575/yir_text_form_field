@@ -1,0 +1,20 @@
+ 
+name: yir_text_form_field_example
+description: Example app for yir_text_form_field
+publish_to: "none"
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # 👇 IMPORTANT: local package link
+  yir_text_form_field:
+    path: ../
+
+flutter:
+  uses-material-design: true
+
+
